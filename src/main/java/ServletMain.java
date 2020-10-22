@@ -14,6 +14,9 @@ public class ServletMain extends javax.servlet.http.HttpServlet {
     protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         PrintWriter pw = response.getWriter();
         HttpSession sess = request.getSession();
+        pw.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n");
+        request.setCharacterEncoding("UTF-8");
+        
         pw.println("<html>");
         pw.println("<h1>");
         pw.println("Loading...!");

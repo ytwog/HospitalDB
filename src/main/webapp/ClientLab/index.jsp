@@ -1,8 +1,8 @@
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="java.util.Properties" %>
 <%@ page import="java.sql.*" %>
+<%@ page import="ServletHelper.HtmlBlockGEnerator" %>
 <!DOCTYPE html>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -21,10 +21,12 @@
         <div class="col-8 ">
             <div class="row justify-content-center">
                 <div class="col-6 text-white items-category bg-secondary border border-dark rounded" id="menu-buy-units">
+                    Staff data
+                    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
                     <%
-
                         HttpSession sess = request.getSession();
                         Connection conCon = (Connection) sess.getAttribute("Connection");
+
                         try {
                             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                         } catch (ClassNotFoundException e) {
@@ -37,8 +39,15 @@
                             ResultSet resSet = statement.executeQuery("SELECT * FROM View_Staff\n");
                             PrintWriter pWriter = response.getWriter();
 
+                            if(resSet.next()) // Если есть элементы таблицы, которые можно считать
+                            out.println(HtmlBlockGEnerator.generateBlock("My profile",
+                                    resSet.getString("Surname") + resSet.getString("Name") + resSet.getString("Patronymic"),
+                                    resSet.getString("Post")));
+
                             while(resSet.next()) {
-                                pWriter.println(resSet.getString("Post"));
+                                out.println(resSet.getString("Post"));
+                                out.println(resSet.getString("Advance"));
+                                out.println(resSet.getString("Wages"));
                             }
 
                             statement.close();
