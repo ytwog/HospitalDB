@@ -1,0 +1,42 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+
+    <display-name>Archetype Created Web Application</display-name>
+
+    <servlet>
+        <servlet-name>ServletInput</servlet-name>
+        <servlet-class>ServletInput</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletMain</servlet-name>
+        <servlet-class>ServletMain</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletLogin</servlet-name>
+        <jsp-file>/WebSecureJS/index.jsp</jsp-file>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletClient</servlet-name>
+        <jsp-file>/ClientLab/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ServletClient</servlet-name>
+        <url-pattern>/client</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletInput</servlet-name>
+        <url-pattern>/input</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletMain</servlet-name>
+        <url-pattern>/feed</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletLogin</servlet-name>
+        <url-pattern>/global</url-pattern>
+    </servlet-mapping>
+</web-app>

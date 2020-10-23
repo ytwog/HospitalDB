@@ -1,0 +1,82 @@
+@font-face {
+  /*
+  Font taken from: https://www.dafont.com/starcraft.font
+  Starcraft font by Pixel Sagas 
+  */
+  font-family: SCfont; src: url('SCfont.ttf');
+}
+
+.inlined {
+  display: inline-block;  
+}
+
+.items-category {
+  font-size: min(max(8px, 3vw), 22px);
+}
+
+p {
+  word-wrap: break-word;
+  font-size: min(max(10px, 1.1vw), 16px);
+}
+
+.using-scfont {
+  font-family: SCfont;
+}
+
+.bg-black {
+  background-color: black;
+}
+
+.img-sm {
+  width: min(max(12px, 4vw), 22px);
+  height: min(max(12px, 4vw), 22px); 
+  image-rendering: pixelated;
+}
+
+.img-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 72%;
+}
+
+.item-wrap:hover {
+    margin-top: -10px;
+   -moz-box-shadow:    0 0 50px black;
+   -webkit-box-shadow: 0 0 50px black;
+    box-shadow:         0 0 50px black;
+    transition: all 0.3s linear;
+}
+.item-wrap:hover:after {
+    background-color: red;
+    margin: 100px;
+}
+
+.item-boxover {
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  width: 100%;
+  image-rendering: pixelated;
+}
+
+.soft-fluid {
+  justify-content: center;
+}
+
+.item-info {
+  text-align: center;
+  font-size: min(max(10px, 0.9vw), 16px);
+}
+
+[class*="col-"]>.row {
+  margin-left: 0.1rem;
+  margin-right: 1rem;
+}
+
+[class*="col-"] {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  transition: all 0.3s linear; 
+  -o-transition: all 0.3s linear; 
+  -moz-transition: all 0.3s linear; 
+  -webkit-transition: all 0.3s linear;
+}

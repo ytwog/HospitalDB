@@ -12,19 +12,18 @@ public class ServletMain extends javax.servlet.http.HttpServlet {
     }
 
     protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        PrintWriter pw = response.getWriter();
         HttpSession sess = request.getSession();
-        pw.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n");
-        request.setCharacterEncoding("UTF-8");
-        
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter pw = response.getWriter();
         pw.println("<html>");
+        pw.println(response.getContentType());
         pw.println("<h1>");
         pw.println("Loading...!");
         pw.println("</h1>");
         pw.println("</html>");
         String userName = request.getParameter("name");
         if(userName == null || userName.equals("")) {
-            response.addHeader("additionalLoginInfo", "No");
+            response.addHeader("additionalLoginInfo", "no data");
             forwardRestart(request, response);
             return;
         }
@@ -41,14 +40,15 @@ public class ServletMain extends javax.servlet.http.HttpServlet {
         Connection con = null;
         try {
             con = DriverManager.getConnection(connectionUrl, connectionProperties);
-        } catch (SQLException throwables) {
-            response.addHeader("additionalLoginInfo", "No");
-            pw.println(request.getAttribute("additionalLoginInfo"));
-            forwardRestart(request, response);
-        } finally {
+
+
             RequestDispatcher reqDispatcher = request.getRequestDispatcher("/ClientLab/index.jsp");
             sess.setAttribute("Connection", con);
+            response.setContentType("text/html;charset=UTF-8");
             reqDispatcher.forward(request, response);
+        } catch (SQLException throwables) {
+            response.addHeader("additionalLoginInfo", "wrong cred");
+            forwardRestart(request, response);
         }
 
     }
