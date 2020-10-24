@@ -1,9 +1,10 @@
 package ServletHelper;
 
-public class HtmlBlockGEnerator {
-    public static String generateBlock(String definition, String firstSentance, String secondSentance) {
-        String res = "<div class=\"col-12 p-1 p-md-2 col-md-6 col-xl-4 text-light bg-secondary\">";
-        res += "<div class=\"item-wrap bg-dark h-100\">" +
+public class HtmlBlockGEnerator implements blockGenerator{
+    @Override
+    public String generateBlock(String definition, String firstSentance, String secondSentance) {
+        String res = "<div class=\"col-12 p-1 p-md-2 col-md-6 col-xl-4 text-light bg-secondary\">" +
+                "<div class=\"item-wrap bg-dark h-100\">" +
                 "<div class=\"img-wrapper mb-md-2\">" +
                 "<img src=\"resource/images/man.png\" alt=\"Picture\" class=\"item-boxover\"></div>";
         res += "<div class=\"d-none d-sm-block d-lg-block py-1 bg-black d-xl-block\"><p class=\" p-1 m-0\">";
@@ -15,8 +16,8 @@ public class HtmlBlockGEnerator {
         res += "</div>\n</div>\n";
         res += "<div class=\"p-1 inlined item-info\">";
         res += secondSentance;
-        res += "</div>\n</div>\n";
-        res += "</div>";
+        res += "</div></div></div>";
         return res;
     }
+
 }

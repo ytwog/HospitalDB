@@ -2,6 +2,8 @@
 <%@ page import="java.util.Properties" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="ServletHelper.HtmlBlockGEnerator" %>
+<%@ page import="ServletHelper.SQLviewer" %>
+<%@ page import="ServletHelper.blockGenerator" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,40 +24,38 @@
             <div class="row justify-content-center">
                 <div class="col-6 text-white items-category bg-secondary border border-dark rounded" id="menu-buy-units">
                     Staff data
-                    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-                    <%
-                        HttpSession sess = request.getSession();
-                        Connection conCon = (Connection) sess.getAttribute("Connection");
+                    <div class="row">
+                        <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+                        <%
+                            HttpSession sess = request.getSession();
+                            Connection conCon = (Connection) sess.getAttribute("Connection");
+                            if(conCon == null) {
+                                response.sendRedirect("/feed");
+                            } else {
+                                try {
+                                    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                String connectionUrl = "jdbc:sqlserver://127.0.0.1;database=Hospital;";
+                                try {
+                                    SQLviewer viewer = new SQLviewer(conCon);
+                                    blockGenerator generator = new HtmlBlockGEnerator();
+                                    SQLviewer.Role userRole = viewer.setupUser();
+                                    Statement statement = conCon.createStatement();
+                                    viewer.generateResponse(generator, "My Profile");
+                                    out.println(generator.generateBlock("Доступ к базе",
+                                            userRole.toString(),
+                                            "YEES"));
+                                    statement.close();
 
-                        try {
-                            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        String connectionUrl = "jdbc:sqlserver://127.0.0.1;database=Hospital;";
-                        try {
-                            Statement statement = conCon.createStatement();
-
-                            ResultSet resSet = statement.executeQuery("SELECT * FROM View_Staff\n");
-                            PrintWriter pWriter = response.getWriter();
-
-                            if(resSet.next()) // Если есть элементы таблицы, которые можно считать
-                            out.println(HtmlBlockGEnerator.generateBlock("My profile",
-                                    resSet.getString("Surname") + resSet.getString("Name") + resSet.getString("Patronymic"),
-                                    resSet.getString("Post")));
-                            statement.close();
-
-                            while(false && resSet.next()) {
-                                out.println(resSet.getString("Post"));
-                                out.println(resSet.getString("Advance"));
-                                out.println(resSet.getString("Wages"));
+                                    statement.close();
+                                } catch (SQLException throwables) {
+                                    throwables.printStackTrace();
+                                }
                             }
-
-                            statement.close();
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        }
-                    %>
+                        %>
+                    </div>
                 </div>
                 <div class="col-6 text-white items-category bg-secondary border border-dark rounded" id="menu-buy-buildings">Result
                     <%

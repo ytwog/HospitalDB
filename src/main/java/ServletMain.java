@@ -8,10 +8,6 @@ import java.util.Properties;
 
 public class ServletMain extends javax.servlet.http.HttpServlet {
     protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-
-    }
-
-    protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         HttpSession sess = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter pw = response.getWriter();
@@ -22,6 +18,7 @@ public class ServletMain extends javax.servlet.http.HttpServlet {
         pw.println("</h1>");
         pw.println("</html>");
         String userName = request.getParameter("name");
+        String passWord = request.getParameter("pass");
         if(userName == null || userName.equals("")) {
             response.addHeader("additionalLoginInfo", "no data");
             forwardRestart(request, response);
@@ -29,8 +26,7 @@ public class ServletMain extends javax.servlet.http.HttpServlet {
         }
         Properties connectionProperties = new Properties();
         connectionProperties.setProperty("user", userName);
-        connectionProperties.setProperty("password", "Xthtvifc1");
-
+        connectionProperties.setProperty("password", passWord);
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (ClassNotFoundException e) {
@@ -42,14 +38,18 @@ public class ServletMain extends javax.servlet.http.HttpServlet {
             con = DriverManager.getConnection(connectionUrl, connectionProperties);
 
 
-            RequestDispatcher reqDispatcher = request.getRequestDispatcher("/ClientLab/index.jsp");
             sess.setAttribute("Connection", con);
-            response.setContentType("text/html;charset=UTF-8");
-            reqDispatcher.forward(request, response);
+            response.sendRedirect("/client");
+            //reqDispatcher.forward(request, response);
         } catch (SQLException throwables) {
             response.addHeader("additionalLoginInfo", "wrong cred");
             forwardRestart(request, response);
         }
+    }
+
+    protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        response.addHeader("additionalLoginInfo", "no data");
+        forwardRestart(request, response);
 
     }
 

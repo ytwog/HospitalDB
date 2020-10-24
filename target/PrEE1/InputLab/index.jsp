@@ -28,7 +28,7 @@
                         }
                         out.println();
                         out.println("<br>");
-                        out.println("<form action=\"feed\" method=\"GET\">");
+                        out.println("<form action=\"feed\" method=\"POST\">");
                         out.println("<p>Name</p>");
                         out.println("<input type=\"text\" name=\"name\">");
                         out.println("<p>Password</p>");
