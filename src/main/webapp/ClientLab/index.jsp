@@ -44,11 +44,7 @@
                                     SQLviewer.Role userRole = viewer.setupUser();
                                     Statement statement = conCon.createStatement();
                                     out.println(viewer.generateResponse(generator, "My Profile"));
-                                    out.println(generator.generateBlock("Доступ к базе",
-                                            userRole.toString(),
-                                            "YEES"));
-                                    statement.close();
-
+                                    out.println(viewer.generateResponse(generator, "My Post"));
                                     statement.close();
                                 } catch (SQLException throwables) {
                                     throwables.printStackTrace();
