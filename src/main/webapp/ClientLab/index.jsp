@@ -7,8 +7,52 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <%
+        // Базовая инициализация
+        HttpSession sess = request.getSession();
+
+        String optionLogout = request.getParameter("logout");
+        String optionQuery = request.getParameter("createQuery");
+        if (optionLogout != null) {
+            sess.invalidate();
+            sess = request.getSession(false);
+            response.sendRedirect("/feed");
+        }
+        SQLviewer viewer = null;
+        blockGenerator generator = new HtmlBlockGEnerator();
+        SQLviewer.Role userRole = SQLviewer.Role.NULL;
+        Connection conCon = null;
+
+        if(sess != null) { // Если сессия клиента актуальна
+
+            conCon = (Connection) sess.getAttribute("Connection");
+
+            if (conCon == null) {
+                response.sendRedirect("/feed");
+            } else {
+                try {
+                    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String connectionUrl = "jdbc:sqlserver://127.0.0.1;database=Hospital;";
+
+                viewer = new SQLviewer(conCon);
+                userRole = viewer.setupUser();
+            }
+        }
+    %>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">HospitalLab</a>
+        <a class="navbar-brand" href="/feed">HospitalLab</a>
+        <%
+            // Установка специфичных для каждой роли кнопок для navbar
+            if(userRole != SQLviewer.Role.NULL) {
+                out.println("<form action=\"client\" method=\"GET\">");
+                out.println("<input type=\"submit\" name=\"createQuery\" value=\"Создать обращение\">");
+                out.println("<input type=\"submit\" name=\"logout\" value=\"Выйти\">");
+                out.println("</form>");
+            }
+        %>
     </nav>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
@@ -27,30 +71,17 @@
                     <div class="row">
                         <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
                         <%
-                            HttpSession sess = request.getSession();
-                            Connection conCon = (Connection) sess.getAttribute("Connection");
-                            if(conCon == null) {
-                                response.sendRedirect("/feed");
-                            } else {
+                            if(conCon != null) {
                                 try {
-                                    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                                } catch (ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                                String connectionUrl = "jdbc:sqlserver://127.0.0.1;database=Hospital;";
-                                try {
-                                    SQLviewer viewer = new SQLviewer(conCon);
-                                    blockGenerator generator = new HtmlBlockGEnerator();
-                                    SQLviewer.Role userRole = viewer.setupUser();
                                     Statement statement = conCon.createStatement();
 
-                                    if(userRole.equals(SQLviewer.Role.DB_ADMIN)) {
+                                    if (userRole.equals(SQLviewer.Role.DB_ADMIN)) {
                                         String optionDiscard = request.getParameter("discard");
                                         String optionAprove = request.getParameter("aprove");
-                                        if (optionDiscard != null){
+                                        if (optionDiscard != null) {
                                             viewer.discardQuery();
                                         }
-                                        if (optionAprove != null){
+                                        if (optionAprove != null) {
                                             viewer.aproveQuery();
                                         }
                                     }

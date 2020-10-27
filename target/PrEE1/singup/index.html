@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">HospitalLab</a>
+    </nav>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>HospitalLab</title>
+    <link rel="stylesheet" href="../resource/bootstrap-4.5.0-dist/css/bootstrap.min.css">
+    <link href="../resource/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="p-4 soft-fluid">
+    <div class="row shadow">
+        <!-- Buying menu -->
+        <div class="text-white items-category bg-secondary border border-dark rounded" id="menu-buy-units">
+            <h3>Регистрация:</h3>
+            <form action="/feed" method="POST">
+            <h4>Данные аккаунта</h4>
+                <div>Логин: <input type="text" name="nameNew"></div>
+                <div>Пароль: <input type="password" name="passNew1"></div>
+                <div>Подтвердите пароль: <input type="password" name="passNew2"></div>
+            <h4>Уровень доступа</h4>
+                <div>
+                    <input type="radio" id="radio-staff" name="drone" value="huey"
+                           checked onclick="updateSingupData()">
+                    <label for="radio-staff">Сотрудник больницы</label>
+                    <input type="radio" id="radio-patient" name="drone" value="dewey"
+                           onclick="updateSingupData()">
+                    <label for="radio-patient">Пациент</label>
+                </div>
+                <script>
+                    function updateSingupData() {
+                        let strPrepared = "";
+                        if (document.getElementById("radio-staff").checked){
+                            strPrepared = "Должность: <input type=\"text\" name=\"drone\" value=\"dewey\">"
+                        } else if (document.getElementById("radio-patient").checked){
+                            strPrepared = "Номер ОМС: <input type=\"text\" name=\"drone\" value=\"dewey\">"
+                        }
+                        document.getElementById("roleBasedHtml").innerHTML = strPrepared;
+                    }
+                </script>
+            <h4>Информация для регистрации</h4>
+                <div id="roleBasedHtml">Выберите уровень доступа</div>
+            </form>
+        </div>
+        <div class="row justify-content-center">
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+</body>
+</html>
+

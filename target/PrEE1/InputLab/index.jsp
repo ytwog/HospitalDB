@@ -34,7 +34,10 @@
                         out.println("<p>Password</p>");
                         out.println("<input type=\"password\" name=\"pass\">");
 
-                        out.println("<input type=\"submit\" name=\"login\" value=\"Login\">");
+                        out.println("<input type=\"submit\" name=\"login\" value=\"Login\"><br>");
+                        out.println("<a href=\"/singup\">");
+                        out.println("Регистрация");
+                        out.println("</a>");
                         out.println("</form>");
                     %>
                 </div>

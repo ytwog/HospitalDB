@@ -50,12 +50,12 @@ public class SQLviewer {
             String password = "ytwog123";
             username = "ytwog";
             String database = "Hospital";
-            /*
-            CREATE LOGIN AbolrousHazem
-            WITH PASSWORD = '340$Uuxwp7Mcxo7Khy';
-            USE HOSPITAL
-            CREATE USER AbolrousHazem FOR LOGIN AbolrousHazem;
-             */
+            resSet = statement.executeQuery("SELECT email FROM [Hospital.AccountQuery]");
+            if(!resSet.next()) {
+                statement.close();
+                return; // Если список запросов пуст, то завершаем изменение
+            }
+            username = resSet.getString("email");
             statement.executeUpdate("CREATE LOGIN "+username+" WITH PASSWORD = '"+password+"'");
             statement.executeUpdate("USE HOSPITAL CREATE USER "+username+" FOR LOGIN "+username+"");
 
@@ -87,13 +87,15 @@ public class SQLviewer {
                 ResultSet resSet = statement.executeQuery(sqlRolenames[i]);
                 if(resSet.next() && (resSet.getBoolean("ROLE"))) {
                       setUserRole(Role.values()[i]);
+                      statement.close();
                       return getUserRole();
                 }
             }
+            statement.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return userRole;
+        return getUserRole();
     }
 
     private String filterNulls(String ask) {
@@ -118,10 +120,12 @@ public class SQLviewer {
                 }
                 else return "";
 
-                if (resSet != null && resSet.next()) // Если есть элементы таблицы, которые можно считать
-                    return (responseDealer.generateBlock(0, "Мой профиль",
-                            resSet.getString("Surname"),
-                            resSet.getString("Name") + resSet.getString("Patronymic")));
+                String returnString = responseDealer.generateBlock(0, "Мой профиль",
+                        resSet.getString("Surname"),
+                        resSet.getString("Name") + resSet.getString("Patronymic"));
+                statement.close();
+                if (resSet.next()) // Если есть элементы таблицы, которые можно считать
+                    return returnString;
             }
             else if(datatype.equals("My Post")) { // Если выводится должность и роль пользователя
                 String [] valueArr = {};
@@ -134,6 +138,7 @@ public class SQLviewer {
                                 resSet.getString("login")
                         };
                     }
+                    statement.close();
                 } else if(userRole == Role.DB_PATIENT) { // Пациент
                     statement = con.createStatement();
                     resSet = statement.executeQuery("SELECT * FROM View_Patient\n");
@@ -144,6 +149,7 @@ public class SQLviewer {
                                 "Адрес:     " + resSet.getString("Address"),
                                 "email:     " + filterNulls(resSet.getString("email"))};
                     }
+                    statement.close();
                 } else if(userRole == Role.DB_ADMIN) {
                     valueArr = new String[]{RoleAttachments.get(userRole)};
                 } else return "";
@@ -159,6 +165,7 @@ public class SQLviewer {
                     } else {
                         valueArr = new String[]{"Запросы", "Пусто"};
                     }
+                    statement.close();
                 } else return " ";
 
                 return (responseDealer.generateBlock(2, valueArr));

@@ -5,7 +5,7 @@
 <html>
 <head>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">HospitalLab</a>
+        <a class="navbar-brand" href="/feed">HospitalLab</a>
     </nav>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
@@ -34,7 +34,10 @@
                         out.println("<p>Password</p>");
                         out.println("<input type=\"password\" name=\"pass\">");
 
-                        out.println("<input type=\"submit\" name=\"login\" value=\"Login\">");
+                        out.println("<input type=\"submit\" name=\"login\" value=\"Login\"><br>");
+                        out.println("<a href=\"/singup\">");
+                        out.println("Регистрация");
+                        out.println("</a>");
                         out.println("</form>");
                     %>
                 </div>

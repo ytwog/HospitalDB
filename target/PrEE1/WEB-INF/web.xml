@@ -7,10 +7,6 @@
     <display-name>Archetype Created Web Application</display-name>
 
     <servlet>
-        <servlet-name>ServletInput</servlet-name>
-        <servlet-class>ServletInput</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ServletMain</servlet-name>
         <servlet-class>ServletMain</servlet-class>
     </servlet>
@@ -26,10 +22,6 @@
     <servlet-mapping>
         <servlet-name>ServletClient</servlet-name>
         <url-pattern>/client</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ServletInput</servlet-name>
-        <url-pattern>/input</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServletMain</servlet-name>
