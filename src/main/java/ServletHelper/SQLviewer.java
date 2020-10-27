@@ -1,9 +1,6 @@
 package ServletHelper;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 
 public class SQLviewer {
@@ -35,6 +32,36 @@ public class SQLviewer {
         RoleAttachments.put(Role.DB_PATIENT, "Пациент");
         RoleAttachments.put(Role.DB_ADMIN, "Администратор");
 
+    }
+
+    public void discardQuery() {
+        if(con == null || userRole != Role.DB_ADMIN)
+            return;
+    }
+
+    public void aproveQuery() {
+        if(con == null || userRole != Role.DB_ADMIN)
+            return;
+        Statement statement;
+        ResultSet resSet;
+        try {
+            statement = con.createStatement();
+            String username = "";
+            String password = "ytwog123";
+            username = "ytwog";
+            String database = "Hospital";
+            /*
+            CREATE LOGIN AbolrousHazem
+            WITH PASSWORD = '340$Uuxwp7Mcxo7Khy';
+            USE HOSPITAL
+            CREATE USER AbolrousHazem FOR LOGIN AbolrousHazem;
+             */
+            statement.executeUpdate("CREATE LOGIN "+username+" WITH PASSWORD = '"+password+"'");
+            statement.executeUpdate("USE HOSPITAL CREATE USER "+username+" FOR LOGIN "+username+"");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public enum Role {
@@ -122,11 +149,24 @@ public class SQLviewer {
                 } else return "";
 
                 return (responseDealer.generateBlock(1, valueArr));
+            } if(datatype.equals("Action Form")) { // Если выводится должность и роль пользователя
+                String [] valueArr = {};
+                if(userRole == Role.DB_ADMIN) {
+                    statement = con.createStatement();
+                    resSet = statement.executeQuery("SELECT * FROM [Hospital.AccountQuery]\n");
+                    if (resSet.next()) {
+                        valueArr = new String[]{"Запросы", resSet.getString("email")};
+                    } else {
+                        valueArr = new String[]{"Запросы", "Пусто"};
+                    }
+                } else return " ";
+
+                return (responseDealer.generateBlock(2, valueArr));
             }
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return "";
+        return " ";
     }
 }

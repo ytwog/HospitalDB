@@ -43,8 +43,21 @@
                                     blockGenerator generator = new HtmlBlockGEnerator();
                                     SQLviewer.Role userRole = viewer.setupUser();
                                     Statement statement = conCon.createStatement();
+
+                                    if(userRole.equals(SQLviewer.Role.DB_ADMIN)) {
+                                        String optionDiscard = request.getParameter("discard");
+                                        String optionAprove = request.getParameter("aprove");
+                                        if (optionDiscard != null){
+                                            viewer.discardQuery();
+                                        }
+                                        if (optionAprove != null){
+                                            viewer.aproveQuery();
+                                        }
+                                    }
+
                                     out.println(viewer.generateResponse(generator, "My Profile"));
                                     out.println(viewer.generateResponse(generator, "My Post"));
+                                    out.println(viewer.generateResponse(generator, "Action Form"));
                                     statement.close();
                                 } catch (SQLException throwables) {
                                     throwables.printStackTrace();
