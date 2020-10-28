@@ -43,7 +43,7 @@
         }
     %>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">HospitalLab</a>
+        <a class="navbar-brand" href="/feed">HospitalLab</a>
         <%
             // Установка специфичных для каждой роли кнопок для navbar
             if(userRole != SQLviewer.Role.NULL) {

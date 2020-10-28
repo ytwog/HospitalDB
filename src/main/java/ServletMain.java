@@ -1,9 +1,12 @@
+import ServletHelper.SQLviewer;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class ServletMain extends javax.servlet.http.HttpServlet {
@@ -19,6 +22,23 @@ public class ServletMain extends javax.servlet.http.HttpServlet {
         pw.println("</html>");
         String userName = request.getParameter("name");
         String passWord = request.getParameter("pass");
+        String registationName = request.getParameter("nameNew");
+        if(registationName != null) {
+            HashMap<String, String> registrationMap = new HashMap<>();
+            registrationMap.put("nameNew", registationName);
+            registrationMap.put("passNew", request.getParameter("passNew1"));
+            registrationMap.put("role", request.getParameter("radio1"));
+            registrationMap.put("data", request.getParameter("dataAccNew"));
+            registrationMap.put("surname", request.getParameter("creds1New"));
+            registrationMap.put("name", request.getParameter("creds2New"));
+            registrationMap.put("patron", request.getParameter("creds3New"));
+            registrationMap.put("problem", request.getParameter("problemNew"));
+            registrationMap.put("address", request.getParameter("addressNew"));
+            registrationMap.put("email", request.getParameter("emailNew"));
+            SQLviewer.createQuery(registrationMap);
+            response.sendRedirect("/client");
+            return;
+        }
         if(userName == null || userName.equals("")) {
             response.addHeader("additionalLoginInfo", "no data");
             forwardRestart(request, response);

@@ -23,7 +23,7 @@
                     <%
                         out.println("<h1>Welcome at our Hospital:</h1>");
                         String loginReason = response.getHeader("additionalLoginInfo");
-                        if(loginReason.equals("wrong cred")) { // Если некорректные логин/пароль
+                        if(loginReason != null && loginReason.equals("wrong cred")) { // Если некорректные логин/пароль
                             out.println("Логин или пароль указаны неверно!");
                         }
                         out.println();
@@ -35,7 +35,7 @@
                         out.println("<input type=\"password\" name=\"pass\">");
 
                         out.println("<input type=\"submit\" name=\"login\" value=\"Login\"><br>");
-                        out.println("<a href=\"/singup\">");
+                        out.println("<a class=\"text-white\" href=\"/singup\">");
                         out.println("Регистрация");
                         out.println("</a>");
                         out.println("</form>");

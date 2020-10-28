@@ -2,6 +2,7 @@ package ServletHelper;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Properties;
 
 public class SQLviewer {
     private Connection con;
@@ -32,6 +33,51 @@ public class SQLviewer {
         RoleAttachments.put(Role.DB_PATIENT, "Пациент");
         RoleAttachments.put(Role.DB_ADMIN, "Администратор");
 
+    }
+
+    public static void createQuery(HashMap<String, String> ask) {
+        Properties connectionProperties = new Properties();
+        connectionProperties.setProperty("user", "guest");
+        connectionProperties.setProperty("password", "");
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        String connectionUrl = "jdbc:sqlserver://127.0.0.1;database=Hospital;";
+        try {
+            Connection con = DriverManager.getConnection(connectionUrl, connectionProperties);
+            Statement ps = con.createStatement();
+            int demanded_role;
+            String patronymicStr = "";
+            String patronymicInsert = "";
+            if(!ask.get("patron").isEmpty()) {
+                patronymicInsert = "patronymic,";
+                patronymicStr = "','" + ask.get("patron");
+            }
+            if(ask.get("role").equals("radio-staff")) {
+                demanded_role = 0;
+                ps.execute("INSERT INTO dbo.[Hospital.AccountQuery] (login, password, demanded_role, surname, name," +
+                        patronymicInsert + "post)" +
+                        "VALUES ('" + ask.get("nameNew") + "','" + ask.get("passNew") + "'," +
+                        String.valueOf(demanded_role) + ",'" + ask.get("surname") + "','" +
+                        ask.get("name") + patronymicStr + "','" + ask.get("post") + "')");
+            }
+            else {
+                demanded_role = 1;
+                ps.execute("INSERT INTO dbo.[Hospital.AccountQuery] (login, password, demanded_role, surname, name," +
+                        patronymicInsert + "email, address, reason, [card ID])" +
+                        "VALUES ('" + ask.get("nameNew") + "','" + ask.get("passNew") + "'," +
+                        String.valueOf(demanded_role) + ",'" + ask.get("surname") + "','" +
+                        ask.get("name") + patronymicStr + "','" + ask.get("email") + "','" +
+                        ask.get("address") + "','" + ask.get("problem") + "','" + ask.get("data") + "')");
+            }
+
+            ps.close();
+            con.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public void discardQuery() {
@@ -119,13 +165,14 @@ public class SQLviewer {
                     resSet = statement.executeQuery("SELECT * FROM View_Patient\n");
                 }
                 else return "";
-
-                String returnString = responseDealer.generateBlock(0, "Мой профиль",
-                        resSet.getString("Surname"),
-                        resSet.getString("Name") + resSet.getString("Patronymic"));
+                String returnString = "";
+                if (resSet.next()) {
+                    returnString = responseDealer.generateBlock(0, "Мой профиль",
+                            resSet.getString("Surname"),
+                            resSet.getString("Name") + resSet.getString("Patronymic"));
+                }
                 statement.close();
-                if (resSet.next()) // Если есть элементы таблицы, которые можно считать
-                    return returnString;
+                return returnString;
             }
             else if(datatype.equals("My Post")) { // Если выводится должность и роль пользователя
                 String [] valueArr = {};

@@ -14,35 +14,119 @@
 <div class="p-4 soft-fluid">
     <div class="row shadow">
         <!-- Buying menu -->
-        <div class="text-white items-category bg-secondary border border-dark rounded" id="menu-buy-units">
-            <h3>Регистрация:</h3>
-            <form action="/feed" method="POST">
-            <h4>Данные аккаунта</h4>
-                <div>Логин: <input type="text" name="nameNew"></div>
-                <div>Пароль: <input type="password" name="passNew1"></div>
-                <div>Подтвердите пароль: <input type="password" name="passNew2"></div>
-            <h4>Уровень доступа</h4>
+        <div class="col-10 p-3 text-white items-category bg-secondary border border-dark rounded" id="menu-buy-units">
+            <h3 class="text-dark">Регистрация:</h3>
+            <form id="regForm" class="col-10 p-3" action="/feed" method="POST">
+            <h4 class="text-dark">Данные аккаунта</h4>
                 <div>
-                    <input type="radio" id="radio-staff" name="drone" value="huey"
-                           checked onclick="updateSingupData()">
-                    <label for="radio-staff">Сотрудник больницы</label>
-                    <input type="radio" id="radio-patient" name="drone" value="dewey"
+                    <label style="width:40%;">Логин*: </label>
+                    <input id="login" type="text" name="nameNew">
+                </div>
+                <div>
+                    <label style="width:40%;">Пароль*: </label>
+                    <input id="pass1" type="password" name="passNew1"></div>
+                <div>
+                    <label style="width:40%;">Подтвердите пароль*: </label>
+                    <input id="pass2" type="password" name="passNew2">
+                    <label class="text-danger" id="warn1"></label>
+                </div>
+            <h4 class="text-dark">Уровень доступа</h4>
+                <div>
+                    <div>
+                        <input type="radio" id="radio-staff" name="radio1" value="radio-staff"
                            onclick="updateSingupData()">
-                    <label for="radio-patient">Пациент</label>
+                        <label for="radio-staff">Сотрудник больницы</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="radio-patient" name="radio1" value="radio-patient"
+                           checked onclick="updateSingupData()">
+                        <label for="radio-patient">Пациент</label>
+                    </div>
                 </div>
                 <script>
+                    function checkSingupData() {
+                        let pass1 = document.getElementById("pass1").value;
+                        let pass2 = document.getElementById("pass2").value;
+                        let login1 = document.getElementById("login").value;
+                        let okFirst = false
+                        if(pass1 !== pass2) {
+                            document.getElementById("warn1").innerHTML = "Пароли должны совпадать!";
+                        } else if(login1 === pass1) {
+                            document.getElementById("warn1").innerHTML = "Пароль совпадает с логином!";
+                        } else if(pass1.length < 6) {
+                            document.getElementById("warn1").innerHTML = "Длина пароля меньше 6 символов!";
+                        } else {
+                            document.getElementById("warn1").innerHTML = "";
+                            okFirst = true
+                        }
+
+                        if(login1.length < 1 || document.getElementById("inp1").value.length < 1 ||
+                            document.getElementById("inp2").value.length < 1 ||
+                            document.getElementById("inp3").value.length < 1 ||
+                            ((document.getElementById("radio-patient").checked) &&
+                            document.getElementById("inp_4").value.length < 1 ||
+                            document.getElementById("inp_5").value.length < 1 ||
+                            document.getElementById("inp_6").value.length < 1)) {
+                            document.getElementById("warn2").innerHTML = "Не все поля заполнены";
+                        } else {
+                            document.getElementById("warn2").innerHTML = "";
+                            if(okFirst) {
+                                let form1 = document.getElementById("regForm")
+                                form1.submit();
+                            }
+                        }
+                    }
+
                     function updateSingupData() {
                         let strPrepared = "";
                         if (document.getElementById("radio-staff").checked){
-                            strPrepared = "Должность: <input type=\"text\" name=\"drone\" value=\"dewey\">"
+                            strPrepared =
+                                "\n<label style=\"width:40%;\">Должность*: </label>\n" +
+                                "<input id=\"inp1\" type=\"text\" name=\"dataAccNew\">\n"
+                            document.getElementById("problemInput").style.display = "none";
                         } else if (document.getElementById("radio-patient").checked){
-                            strPrepared = "Номер ОМС: <input type=\"text\" name=\"drone\" value=\"dewey\">"
+                            strPrepared =
+                                "\n<label style=\"width:40%;\">ОМС*: </label>\n" +
+                                "<input id=\"inp1\" type=\"text\" name=\"dataAccNew\">\n"
+                            document.getElementById("problemInput").style.display = "block";
                         }
                         document.getElementById("roleBasedHtml").innerHTML = strPrepared;
                     }
                 </script>
-            <h4>Информация для регистрации</h4>
-                <div id="roleBasedHtml">Выберите уровень доступа</div>
+            <h4 class="text-dark">Информация для регистрации</h4>
+                <div>
+                    <label style="width:40%;">Фамилия*: </label>
+                    <input id="inp2" type="text" name="creds1New"></div>
+                <div>
+                    <label style="width:40%;">Имя*: </label>
+                    <input id="inp3" type="text" name="creds2New">
+                </div>
+                <div>
+                    <label style="width:40%;">Отчество: </label>
+                    <input type="text" name="creds3New">
+                </div>
+                <div id="problemInput">
+                    <div>
+                        <label style="width:40%;">Причина обращения*: </label>
+                        <input id="inp_4" type="text" name="problemNew">
+                    </div>
+                    <div>
+                        <label style="width:40%;">Адрес*: </label>
+                        <input id="inp_5" type="text" name="addressNew">
+                    </div>
+                    <div>
+                        <label style="width:40%;">Email*: </label>
+                        <input id="inp_6" type="text" name="emailNew">
+                    </div>
+                </div>
+                <div id="roleBasedHtml">
+                    <label style="width:40%;">ОМС*: </label>
+                    <input id="inp1" type="text" name="dataAccNew" value="">
+                </div>
+                <div>
+                    <input type="button" onclick="checkSingupData()" name="regButton" value="Отправить">
+                    <label class="text-danger" id="warn2"></label>
+                </div>
             </form>
         </div>
         <div class="row justify-content-center">
